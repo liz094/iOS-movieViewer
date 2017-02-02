@@ -1,5 +1,3 @@
-# iOS-movieViewer
-
 # Project 1 - *Movie Viewer*
 
 **Name of your app** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
