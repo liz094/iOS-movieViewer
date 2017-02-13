@@ -15,15 +15,19 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    
-       var movies: [NSDictionary]?
+    var movies: [NSDictionary]?
+    var endpoint : String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    
         
         collectionView.dataSource = self
         collectionView.delegate = self
 
+        //searchBar = UISearchBar()
+        //searchBar.sizeToFit()
+        
         //flowLayout.scrollDirection = .horizontal
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
@@ -39,7 +43,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")!
+        let url = URL(string: "https://api.themoviedb.org/3/movie/\(endpoint!)?api_key=\(apiKey)")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
         // Display HUD right before the request is made
@@ -64,6 +68,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     
     
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -76,7 +81,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         // ... Create the URLRequest `myRequest` ...
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")!
+        let url = URL(string: "https://api.themoviedb.org/3/movie/\(endpoint!)?api_key=\(apiKey)")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         
         // Configure session so that completion handler is executed on main UI thread
@@ -93,6 +98,24 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         task.resume()
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+        let cell = collectionView.cellForItem(at: indexPath)
+        cell?.isSelected = false
+        
+        // Use a red color when the user selects the cell
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.cyan.withAlphaComponent(0.4)
+        cell?.selectedBackgroundView = backgroundView
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool{
+        let cell = collectionView.cellForItem(at: indexPath)
+        cell?.selectedBackgroundView = .none
+        return true
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         if let movies = movies{
@@ -117,8 +140,9 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
 
         return cell
-        
     }
+    
+    
     /*
     func tableView(_ tableView: UITableView, cellForItemAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
@@ -140,9 +164,6 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         return cell
     }*/
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selected cell number: \(indexPath.row)")
-    }
     
     /*
     func posterForIndexPath(indexPath: NSIndexPath) -> UIImage{
@@ -170,6 +191,5 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    
 
 }
